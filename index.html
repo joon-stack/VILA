@@ -84,13 +84,15 @@
       background: #fff;
     }
 
-    /* Video cards: consistent rounding */
+    /* Video cards: consistent rounding + size cap */
     .sim-video {
       width: 100%;
+      max-width: 260px;
       border-radius: 8px;
       display: block;
       aspect-ratio: 16 / 9;
       object-fit: cover;
+      margin: 0 auto;
     }
 
     /* =========================
@@ -115,7 +117,7 @@
     /* Real-world stacked videos: hard cap container width */
     .real-video-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 260px;
       margin: 0 auto;
     }
     .real-video-container video {
