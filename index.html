@@ -198,117 +198,141 @@
         <h3 class="title is-4">1. Unseen View Generalization (Simulation)</h3>
         <div class="content has-text-justified">
           <p>
-            We evaluated VILA on five Robosuite tasks (Lift, Square, Stack Three, Coffee, Mug Cleanup) with 25 distinct camera poses. 
-            VILA consistently outperforms baselines in both fine-tuned and frozen settings, especially as the viewpoint difference increases.
+            We compare VILA against two baselines (Vanilla, CLASS) across five simulation tasks.
+            VILA consistently succeeds in unseen viewpoints, while baselines often fail.
           </p>
         </div>
 
-        <div class="columns is-centered">
-          <div class="column is-10">
-            <img src="./static/images/view_generalization_combined.png" 
-                 alt="Quantitative Results"
-                 style="width:100%; border: 1px solid #ddd; padding: 5px;"
-                 onerror="this.src='https://via.placeholder.com/800x400?text=Figure+4:+View+Generalization+Graph';">
-            <p class="is-size-6 has-text-centered">
-              <em>Success rates of VILA and baseline methods with respect to angular differences from training viewpoints.</em>
-            </p>
+        <div id="sim-results-carousel" class="carousel results-carousel">
+          
+          <div class="item">
+            <h4 class="title is-5 has-text-centered">Task: Lift</h4>
+            <div class="columns is-centered is-mobile" style="margin-bottom: 10px;">
+              <div class="column has-text-centered">
+                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
+                <img src="./static/images/sim_lift_vila.gif" alt="Lift VILA" style="border: 2px solid #4CAF50; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">Vanilla</p>
+                <img src="./static/images/sim_lift_vanilla.gif" alt="Lift Vanilla" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">CLASS</p>
+                <img src="./static/images/sim_lift_class.gif" alt="Lift CLASS" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+            </div>
           </div>
+
+          <div class="item">
+            <h4 class="title is-5 has-text-centered">Task: Square</h4>
+            <div class="columns is-centered is-mobile" style="margin-bottom: 10px;">
+              <div class="column has-text-centered">
+                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
+                <img src="./static/images/sim_square_vila.gif" alt="Square VILA" style="border: 2px solid #4CAF50; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">Vanilla</p>
+                <img src="./static/images/sim_square_vanilla.gif" alt="Square Vanilla" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">CLASS</p>
+                <img src="./static/images/sim_square_class.gif" alt="Square CLASS" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+            </div>
+          </div>
+
+          <div class="item">
+            <h4 class="title is-5 has-text-centered">Task: Stack Three</h4>
+            <div class="columns is-centered is-mobile" style="margin-bottom: 10px;">
+              <div class="column has-text-centered">
+                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
+                <img src="./static/images/sim_stackthree_vila.gif" alt="Stack Three VILA" style="border: 2px solid #4CAF50; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">Vanilla</p>
+                <img src="./static/images/sim_stackthree_vanilla.gif" alt="Stack Three Vanilla" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">CLASS</p>
+                <img src="./static/images/sim_stackthree_class.gif" alt="Stack Three CLASS" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+            </div>
+          </div>
+
+          <div class="item">
+            <h4 class="title is-5 has-text-centered">Task: Coffee</h4>
+            <div class="columns is-centered is-mobile" style="margin-bottom: 10px;">
+              <div class="column has-text-centered">
+                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
+                <img src="./static/images/sim_coffee_vila.gif" alt="Coffee VILA" style="border: 2px solid #4CAF50; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">Vanilla</p>
+                <img src="./static/images/sim_coffee_vanilla.gif" alt="Coffee Vanilla" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">CLASS</p>
+                <img src="./static/images/sim_coffee_class.gif" alt="Coffee CLASS" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+            </div>
+          </div>
+
+          <div class="item">
+            <h4 class="title is-5 has-text-centered">Task: Mug Cleanup</h4>
+            <div class="columns is-centered is-mobile" style="margin-bottom: 10px;">
+              <div class="column has-text-centered">
+                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
+                <img src="./static/images/sim_mug_vila.gif" alt="Mug VILA" style="border: 2px solid #4CAF50; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">Vanilla</p>
+                <img src="./static/images/sim_mug_vanilla.gif" alt="Mug Vanilla" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+              <div class="column has-text-centered">
+                <p class="is-size-7">CLASS</p>
+                <img src="./static/images/sim_mug_class.gif" alt="Mug CLASS" style="border: 1px solid #ccc; border-radius: 5px; width: 100%;">
+              </div>
+            </div>
+          </div>
+
         </div>
         <br>
 
         <h3 class="title is-4">2. Real-World Experiments</h3>
         <div class="content has-text-justified">
           <p>
-            We validate our method on a real-world SO-ARM101 robot for <strong>Pick & Place</strong> and <strong>Drawer</strong> tasks.
-            The figure below shows the setup for unseen views used in evaluation.
+            We compare VILA against baselines on the <strong>Drawer</strong> task in an unseen viewpoint.
+            <strong>VILA</strong> successfully completes the task, while baselines fail due to the viewpoint shift.
           </p>
         </div>
 
+        <h4 class="title is-5 has-text-centered">Drawer Task (Unseen View)</h4>
         <div class="columns is-centered">
-          <div class="column is-10 has-text-centered">
-            <img src="./static/images/real_world_setup.png" 
-                 alt="Real-World Unseen Views" 
-                 style="width:100%; border: 1px solid #ddd; padding: 5px;"
-                 onerror="this.src='https://via.placeholder.com/800x400?text=Figure:+Real-World+View+Setup';">
-             <p class="is-size-6 has-text-centered">
-               <em>Overview of the unseen camera viewpoints for Pick & Place (Top) and Drawer (Bottom) tasks.</em>
-             </p>
+          <div class="column has-text-centered">
+            <p class="is-size-6"><strong>VILA (Ours)</strong></p>
+            <img src="./static/images/real_drawer_vila.gif" 
+                 alt="VILA Success" 
+                 style="width:100%; border: 2px solid #4CAF50; border-radius: 5px;"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=VILA+(Success)';">
+            <p style="color: #4CAF50; font-weight: bold; margin-top: 5px;">Success</p>
           </div>
-        </div>
-        <br>
 
-        <div class="content has-text-justified">
-          <p>
-            VILA achieves significantly higher success rates on these unseen views compared to baselines.
-            The table below summarizes the success rates (%) on real-world tasks.
-          </p>
-        </div>
-        <div class="columns is-centered">
-          <div class="column is-10">
-            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style="font-size: 0.9em;">
-              <thead>
-                <tr class="has-background-light">
-                  <th rowspan="2" style="vertical-align: middle;">Model</th>
-                  <th colspan="4" class="has-text-centered">Pick & Place</th>
-                  <th colspan="3" class="has-text-centered">Drawer</th>
-                </tr>
-                <tr class="has-background-light">
-                  <th class="has-text-centered">View 1</th>
-                  <th class="has-text-centered">View 2</th>
-                  <th class="has-text-centered">View 3</th>
-                  <th class="has-text-centered">Avg.</th>
-                  <th class="has-text-centered">View 1</th>
-                  <th class="has-text-centered">View 2</th>
-                  <th class="has-text-centered">Avg.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="background-color: #e6f7ff;"> <td><strong>VILA (Ours)</strong></td>
-                  <td class="has-text-centered"><strong>70.00</strong></td>
-                  <td class="has-text-centered"><strong>80.00</strong></td>
-                  <td class="has-text-centered"><strong>40.00</strong></td>
-                  <td class="has-text-centered"><strong>63.33</strong></td>
-                  <td class="has-text-centered"><strong>80.00</strong></td>
-                  <td class="has-text-centered"><strong>90.00</strong></td>
-                  <td class="has-text-centered"><strong>85.00</strong></td>
-                </tr>
-                <tr>
-                  <td>Vanilla</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">10.00</td>
-                  <td class="has-text-centered">3.33</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">0.00</td>
-                </tr>
-                <tr>
-                  <td>CLASS</td>
-                  <td class="has-text-centered">10.00</td>
-                  <td class="has-text-centered">30.00</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">13.33</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">0.00</td>
-                  <td class="has-text-centered">0.00</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="column has-text-centered">
+            <p class="is-size-6">Vanilla</p>
+            <img src="./static/images/real_drawer_vanilla.gif" 
+                 alt="Vanilla Fail" 
+                 style="width:100%; border: 2px solid #F44336; border-radius: 5px;"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=Vanilla+(Fail)';">
+            <p style="color: #F44336; font-weight: bold; margin-top: 5px;">Fail</p>
           </div>
-        </div>
-        
-        <div class="content has-text-centered">
-             <p><strong>Real-World Demos (Unseen Views)</strong></p>
-        </div>
-        <div id="results-carousel" class="carousel results-carousel">
-          <div class="item item-real1">
-            <img src="./static/images/real_v1.png" alt="Real World View 1" style="width:100%;">
-          </div>
-          <div class="item item-real2">
-            <img src="./static/images/real_v2.png" alt="Real World View 2" style="width:100%;">
-          </div>
-          <div class="item item-real3">
-             <img src="./static/images/real_drawer_v1.png" alt="Drawer Task" style="width:100%;">
+
+          <div class="column has-text-centered">
+            <p class="is-size-6">CLASS</p>
+            <img src="./static/images/real_drawer_class.gif" 
+                 alt="CLASS Fail" 
+                 style="width:100%; border: 2px solid #F44336; border-radius: 5px;"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=CLASS+(Fail)';">
+            <p style="color: #F44336; font-weight: bold; margin-top: 5px;">Fail</p>
           </div>
         </div>
         <br>
