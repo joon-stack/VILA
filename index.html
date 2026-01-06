@@ -35,13 +35,25 @@
   <script src="./static/js/index.js"></script>
 
   <style>
-    /* 리얼 월드 비디오 크기 제한 및 정렬 */
+    /* 리얼 월드 및 분석 이미지 크기 제한 */
     .real-video-container {
-      max-width: 320px;
+      max-width: 300px; 
       margin: 0 auto;
     }
-    .method-list li {
-      margin-bottom: 0.5em;
+    .analysis-img {
+      max-width: 400px; 
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+    .adaptation-img {
+      max-width: 500px; 
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
+    .results-carousel {
+      overflow: hidden;
     }
   </style>
 </head>
@@ -182,7 +194,7 @@
             We build on top of Latent Action Models (LAM). The core insight is that invariance should be enforced not on a static scene-level visual representation, but rather on the <strong>dynamics</strong>.
             To achieve this, we introduce:
           </p>
-          <ul class="method-list">
+          <ul>
             <li><strong>Action-Aware Contrastive Objective:</strong> Latent actions inferred from different viewpoints are pulled closer if their corresponding future GT action sequences are similar.</li>
             <li><strong>Structural Alignment:</strong> We align the global similarity structure of the latent action space with the ground-truth action space.</li>
           </ul>
@@ -371,19 +383,17 @@
         <br>
 
         <h3 class="title is-4">3. Unseen Task Adaptation</h3>
-        <div class="columns is-vcentered">
-          <div class="column is-6">
+        <div class="columns is-centered is-vcentered">
+          <div class="column is-12 has-text-centered">
             <div class="content has-text-justified">
               <p>
                 We investigate whether representations learned on one dataset (Stack Three) provide useful priors for another task (Coffee).
                 As shown in the graph, VILA provides a stronger prior than baselines, enabling data-efficient adaptation.
               </p>
             </div>
-          </div>
-          <div class="column is-6">
             <img src="./static/images/task_adaptation_combined_line.png" 
                  alt="Task Adaptation"
-                 style="width:100%;"
+                 class="adaptation-img"
                  onerror="this.src='https://via.placeholder.com/500x300?text=Figure+5:+Task+Adaptation';">
           </div>
         </div>
@@ -398,17 +408,17 @@
 
         <h5 class="title is-6 has-text-centered">View Invariance (Colored by View ID)</h5>
         <div class="columns is-centered is-vcentered is-multiline">
-          <div class="column is-5 has-text-centered">
+          <div class="column is-6 has-text-centered">
             <img src="./static/images/umap_views_before.png" 
                  alt="View UMAP Before"
-                 style="border: 1px solid #eee; width: 100%;"
+                 class="analysis-img"
                  onerror="this.src='https://via.placeholder.com/400x300?text=View+UMAP+(Before)';">
             <p>Before Policy Training</p>
           </div>
-          <div class="column is-5 has-text-centered">
+          <div class="column is-6 has-text-centered">
             <img src="./static/images/umap_views_after.png" 
                  alt="View UMAP After"
-                 style="border: 1px solid #eee; width: 100%;"
+                 class="analysis-img"
                  onerror="this.src='https://via.placeholder.com/400x300?text=View+UMAP+(After)';">
             <p>After Policy Training</p>
           </div>
@@ -419,17 +429,17 @@
 
         <h5 class="title is-6 has-text-centered">Action Semantics (Colored by Action Cluster)</h5>
         <div class="columns is-centered is-vcentered is-multiline">
-          <div class="column is-5 has-text-centered">
+          <div class="column is-6 has-text-centered">
             <img src="./static/images/umap_action_before.png" 
                  alt="Action UMAP Before"
-                 style="border: 1px solid #eee; width: 100%;"
+                 class="analysis-img"
                  onerror="this.src='https://via.placeholder.com/400x300?text=Action+UMAP+(Before)';">
             <p>Before Policy Training</p>
           </div>
-          <div class="column is-5 has-text-centered">
+          <div class="column is-6 has-text-centered">
             <img src="./static/images/umap_action_after.png" 
                  alt="Action UMAP After"
-                 style="border: 1px solid #eee; width: 100%;"
+                 class="analysis-img"
                  onerror="this.src='https://via.placeholder.com/400x300?text=Action+UMAP+(After)';">
             <p>After Policy Training</p>
           </div>
@@ -474,6 +484,18 @@
     </div>
   </div>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousels = bulmaCarousel.attach('#sim-results-carousel', {
+      slidesToScroll: 1,
+      slidesToShow: 1,
+      infinite: false,
+      pagination: true,
+      navigation: true
+    });
+  });
+</script>
 
 </body>
 </html>
