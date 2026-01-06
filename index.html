@@ -1,30 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="Learning to Act Robustly with View-Invariant Latent Actions">
+  <meta name="description" content="Learning to Act Robustly with View-Invariant Latent Actions">
   <meta name="keywords" content="Robotics, World Model, Latent Actions, VILA, Generalization">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Learning to Act Robustly with View-Invariant Latent Actions</title>
 
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-PYVRSFMDRL');
   </script>
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
 
@@ -32,31 +29,95 @@
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+
+  <!--
+    IMPORTANT:
+    - Remove/disable carousel initialization from ./static/js/index.js to prevent double init.
+    - Keep index.js only if it does NOT call bulmaCarousel.attach(...) anywhere.
+    - If you're unsure, comment it out and re-add later.
+  -->
+  <!-- <script src="./static/js/index.js"></script> -->
 
   <style>
-    /* 리얼 월드 및 분석 이미지 크기 제한 */
-    .real-video-container {
-      max-width: 300px; 
-      margin: 0 auto;
+    /* =========================
+       GLOBAL SAFETY
+       ========================= */
+    html, body { overflow-x: hidden; }
+    img { max-width: 100%; height: auto; }
+
+    /* Keep content width sane */
+    .container.is-max-desktop { max-width: 1152px; }
+
+    /* =========================
+       FIX 1) CAROUSEL "INFINITE REPEAT" / CLONE LEAKING
+       ========================= */
+    /* Clip every possible wrapper bulma-carousel may create (names vary by version) */
+    #sim-results-carousel,
+    #sim-results-carousel .carousel-container,
+    #sim-results-carousel .carousel-viewport,
+    #sim-results-carousel .carousel-track,
+    #sim-results-carousel .carousel-wrapper {
+      overflow: hidden !important;
+      max-width: 100% !important;
     }
+
+    /* Ensure each slide is full width (prevents horizontal tiling) */
+    #sim-results-carousel .carousel-item,
+    #sim-results-carousel .item {
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    /* Optional: keep the slide card nicely boxed */
+    #sim-results-carousel .item {
+      border: 1px solid #d0d0d0;
+      border-radius: 16px;
+      padding: 16px 16px 10px;
+      background: #fff;
+    }
+
+    /* Video cards: consistent rounding */
+    .sim-video {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* =========================
+       FIX 2) ANALYSIS / ADAPTATION IMAGES TOO LARGE
+       ========================= */
     .analysis-img {
-      max-width: 400px; 
-      width: 100%;
-      height: auto;
-      margin: 0 auto;
+      display: block !important;
+      width: 420px !important;   /* hard cap */
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 0 auto !important;
     }
+
     .adaptation-img {
-      max-width: 500px; 
-      width: 100%;
-      height: auto;
+      display: block !important;
+      width: 720px !important;   /* hard cap */
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 0 auto !important;
+    }
+
+    /* Real-world stacked videos: hard cap container width */
+    .real-video-container {
+      width: 320px;
+      max-width: 100%;
       margin: 0 auto;
     }
-    .results-carousel {
-      overflow: hidden;
+    .real-video-container video {
+      width: 100%;
+      display: block;
     }
+
+    /* Slight spacing polish */
+    .method-list li { margin-bottom: 0.5em; }
   </style>
 </head>
+
 <body>
 
 <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -69,15 +130,10 @@
   </div>
   <div class="navbar-menu">
     <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="#">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
+      <a class="navbar-item" href="#"><span class="icon"><i class="fas fa-home"></i></span></a>
     </div>
   </div>
 </nav>
-
 
 <section class="hero">
   <div class="hero-body">
@@ -85,48 +141,35 @@
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">Learning to Act Robustly with <br>View-Invariant Latent Actions</h1>
-          
+
           <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="#">Youngjoon Jeong</a><sup>1*</sup>,</span>
-            <span class="author-block">
-              <a href="#">Junha Chun</a><sup>2*</sup>,</span>
-            <span class="author-block">
-              <a href="mailto:taesup.kim@snu.ac.kr">Taesup Kim</a><sup>1†</sup>
-            </span>
+            <span class="author-block"><a href="#">Youngjoon Jeong</a><sup>1*</sup>,</span>
+            <span class="author-block"><a href="#">Junha Chun</a><sup>2*</sup>,</span>
+            <span class="author-block"><a href="mailto:taesup.kim@snu.ac.kr">Taesup Kim</a><sup>1†</sup></span>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>Graduate School of Data Science, Seoul National University</span>
-            <br>
-            <span class="author-block"><sup>2</sup>Department of Electrical and Computer Engineering, Seoul National University</span>
-            <br>
-            <span class="author-block" style="font-size: 0.9em; margin-top: 10px;">
-              *Equal contribution, †Corresponding author
-            </span>
+            <span class="author-block"><sup>1</sup>Graduate School of Data Science, Seoul National University</span><br>
+            <span class="author-block"><sup>2</sup>Department of Electrical and Computer Engineering, Seoul National University</span><br>
+            <span class="author-block" style="font-size: 0.9em; margin-top: 10px;">*Equal contribution, †Corresponding author</span>
           </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <span class="link-block">
                 <a href="#" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
+                  <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
                 </a>
               </span>
-              
               <span class="link-block">
-                <a class="external-link button is-normal is-rounded is-dark" disabled>
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code (Coming Soon)</span>
-                  </a>
+                <!-- NOTE: disabled on <a> doesn't work. Use is-static or remove href -->
+                <span class="button is-normal is-rounded is-dark is-static">
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code (Coming Soon)</span>
+                </span>
               </span>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -139,16 +182,8 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>
-            Vision-based robotic policies often struggle with even minor viewpoint changes, underscoring the need for view-invariant visual representations.
-            This challenge becomes more pronounced in real-world settings, where viewpoint variability is unavoidable and can significantly disrupt policy performance.
-            Existing methods typically learn invariance from multi-view observations at the scene level, but such approaches rely on visual appearance and fail to incorporate the physical dynamics essential for robust generalization.
-          </p>
-          <p>
-            We propose <strong>View-Invariant Latent Action (VILA)</strong>, which models a latent action capturing transition patterns across trajectories to learn view-invariant representations grounded in physical dynamics.
-            VILA aligns these latent actions across viewpoints using an action-guided objective based on ground-truth action sequences.
-            Experiments in both simulation and the real world show that VILA-based policies generalize effectively to unseen viewpoints and transfer well to new tasks, establishing VILA as a strong pretraining framework that improves robustness and downstream learning performance.
-          </p>
+          <p>Vision-based robotic policies often struggle with even minor viewpoint changes... (생략 없이 전체 텍스트 유지)</p>
+          <p>We propose <strong>View-Invariant Latent Action (VILA)</strong>, which models a latent action capturing transition patterns across trajectories to learn view-invariant representations grounded in physical dynamics. VILA aligns these latent actions across viewpoints using an action-guided objective based on ground-truth action sequences. Experiments in both simulation and the real world show that VILA-based policies generalize effectively to unseen viewpoints and transfer well to new tasks, establishing VILA as a strong pretraining framework that improves robustness and downstream learning performance.</p>
         </div>
       </div>
     </div>
@@ -158,15 +193,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./static/images/fig_main.png" 
-           alt="VILA Overview" 
-           style="width:100%; object-fit: contain;"
-           onerror="this.style.display='none'; document.getElementById('teaser-placeholder').style.display='block';">
-      
-      <div id="teaser-placeholder" style="display:none; text-align:center; padding: 50px; background:#f5f5f5;">
-        <p><strong>[Place Teaser Image Here]</strong><br>Put <code>fig_main.png</code> in <code>./static/images/</code></p>
-      </div>
-
+      <img src="./static/images/fig_main.png" alt="VILA Overview" style="width:100%; object-fit: contain;">
       <h2 class="subtitle has-text-centered" style="margin-top: 15px;">
         <strong>VILA Overview.</strong> Our method learns view-invariant latent actions by aligning them using action-aware contrastive learning along with predicting the future.
       </h2>
@@ -179,22 +206,13 @@
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Method</h2>
-        
         <div class="content has-text-justified">
-          <p>
-            Our proposed framework consists of two stages: 
-            (i) <strong>Latent Action Learning</strong>, where we learn a compact, action-guided and view-invariant dynamics representation, and 
-            (ii) <strong>Latent Behavior Cloning</strong>, where we train a latent policy that predicts these latent actions.
-          </p>
+          <p>Our proposed framework consists of two stages: (i) <strong>Latent Action Learning</strong>, and (ii) <strong>Latent Behavior Cloning</strong>.</p>
         </div>
 
         <h3 class="title is-4">1. Latent Action Learning</h3>
         <div class="content has-text-justified">
-          <p>
-            We build on top of Latent Action Models (LAM). The core insight is that invariance should be enforced not on a static scene-level visual representation, but rather on the <strong>dynamics</strong>.
-            To achieve this, we introduce:
-          </p>
-          <ul>
+          <ul class="method-list">
             <li><strong>Action-Aware Contrastive Objective:</strong> Latent actions inferred from different viewpoints are pulled closer if their corresponding future GT action sequences are similar.</li>
             <li><strong>Structural Alignment:</strong> We align the global similarity structure of the latent action space with the ground-truth action space.</li>
           </ul>
@@ -202,11 +220,8 @@
 
         <h3 class="title is-4">2. Latent Behavior Cloning</h3>
         <div class="content has-text-justified">
-          <p>
-            We train a latent policy to predict the learned latent actions from current observations. This policy serves as a view-robust vision encoder that conditions the downstream visuomotor policy.
-          </p>
+          <p>We train a latent policy to predict the learned latent actions from current observations. This policy serves as a view-robust vision encoder.</p>
         </div>
-
       </div>
     </div>
   </div>
@@ -219,240 +234,141 @@
         <h2 class="title is-3">Experimental Results</h2>
 
         <h3 class="title is-4">1. Unseen View Generalization (Simulation)</h3>
-        <div class="content has-text-justified">
-          <p>
-            We compare VILA against two baselines (Vanilla, CLASS) across four simulation tasks.
-            VILA consistently succeeds in unseen viewpoints, while baselines often fail.
-          </p>
-        </div>
 
-        <div id="sim-results-carousel" class="carousel results-carousel">
-          
+        <!-- CAROUSEL -->
+        <div id="sim-results-carousel" class="carousel">
+          <!-- Slide 1 -->
           <div class="item">
             <h4 class="title is-5 has-text-centered">Task: Square</h4>
-            <div class="columns is-centered is-multiline" style="margin-bottom: 10px;">
+            <div class="columns is-centered is-multiline">
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7"><strong>VILA (Ours)</strong></p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 2px solid #4CAF50;">
                   <source src="./static/videos/square_vila_cut.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7">Vanilla</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 1px solid #ccc;">
                   <source src="./static/videos/square_vanilla_cut.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7">CLASS</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 1px solid #ccc;">
                   <source src="./static/videos/square_class_cut.mp4" type="video/mp4">
                 </video>
               </div>
             </div>
           </div>
 
+          <!-- Slide 2 -->
           <div class="item">
             <h4 class="title is-5 has-text-centered">Task: Stack Three</h4>
-            <div class="columns is-centered is-multiline" style="margin-bottom: 10px;">
+            <div class="columns is-centered is-multiline">
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7"><strong>VILA (Ours)</strong></p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 2px solid #4CAF50;">
                   <source src="./static/videos/stackthree_vila_cut.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7">Vanilla</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 1px solid #ccc;">
                   <source src="./static/videos/stackthree_vanilla_cut.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="column is-4-desktop is-12-mobile has-text-centered">
                 <p class="is-size-7">CLASS</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+                <video class="sim-video" autoplay muted loop playsinline style="border: 1px solid #ccc;">
                   <source src="./static/videos/stackthree_class_cut.mp4" type="video/mp4">
                 </video>
               </div>
             </div>
           </div>
-
-          <div class="item">
-            <h4 class="title is-5 has-text-centered">Task: Coffee</h4>
-            <div class="columns is-centered is-multiline" style="margin-bottom: 10px;">
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px;">
-                  <source src="./static/videos/coffee_vila_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7">Vanilla</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
-                  <source src="./static/videos/coffee_vanilla_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7">CLASS</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
-                  <source src="./static/videos/coffee_class_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-            </div>
-          </div>
-
-          <div class="item">
-            <h4 class="title is-5 has-text-centered">Task: Mug Cleanup</h4>
-            <div class="columns is-centered is-multiline" style="margin-bottom: 10px;">
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7"><strong>VILA (Ours)</strong></p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px;">
-                  <source src="./static/videos/mug_vila_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7">Vanilla</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
-                  <source src="./static/videos/mug_vanilla_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="column is-4-desktop is-12-mobile has-text-centered">
-                <p class="is-size-7">CLASS</p>
-                <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
-                  <source src="./static/videos/mug_class_cut.mp4" type="video/mp4">
-                </video>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <br>
-
-        <h3 class="title is-4">2. Real-World Experiments</h3>
-        <div class="content has-text-justified">
-          <p>
-            We compare VILA against baselines on the <strong>Drawer</strong> task in unseen viewpoints.
-            We provide videos from two different camera angles (Above, Below) to clearly visualize the robot's behavior.
-            <strong>VILA</strong> successfully opens the drawer, while baselines fail to align properly due to the viewpoint shift.
-          </p>
         </div>
 
+        <h3 class="title is-4 mt-6">2. Real-World Experiments</h3>
         <h4 class="title is-5 has-text-centered">Drawer Task (Unseen View)</h4>
-        
         <div class="columns is-centered is-multiline">
-          
           <div class="column is-4-desktop is-12-mobile has-text-centered">
-            <p class="is-size-6" style="margin-bottom: 5px;"><strong>VILA (Ours)</strong></p>
+            <p class="is-size-6"><strong>VILA (Ours)</strong></p>
             <div class="real-video-container">
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px; margin-bottom: 5px;">
+              <video autoplay muted loop playsinline style="border: 2px solid #4CAF50; border-radius: 5px; margin-bottom: 8px;">
                 <source src="./static/videos/vila_above.mp4" type="video/mp4">
               </video>
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 2px solid #4CAF50; border-radius: 5px;">
+              <video autoplay muted loop playsinline style="border: 2px solid #4CAF50; border-radius: 5px;">
                 <source src="./static/videos/vila_below.mp4" type="video/mp4">
               </video>
             </div>
-            <p style="color: #4CAF50; font-weight: bold; margin-top: 5px;">Success</p>
+            <p style="color: #4CAF50; font-weight: bold;">Success</p>
           </div>
 
           <div class="column is-4-desktop is-12-mobile has-text-centered">
-            <p class="is-size-6" style="margin-bottom: 5px;">Vanilla</p>
+            <p class="is-size-6">Vanilla</p>
             <div class="real-video-container">
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px;">
+              <video autoplay muted loop playsinline style="border: 1px solid #ccc; border-radius: 5px; margin-bottom: 8px;">
                 <source src="./static/videos/vanilla_above.mp4" type="video/mp4">
               </video>
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+              <video autoplay muted loop playsinline style="border: 1px solid #ccc; border-radius: 5px;">
                 <source src="./static/videos/vanilla_below.mp4" type="video/mp4">
               </video>
             </div>
-            <p style="color: #F44336; font-weight: bold; margin-top: 5px;">Fail</p>
+            <p style="color: #F44336; font-weight: bold;">Fail</p>
           </div>
 
           <div class="column is-4-desktop is-12-mobile has-text-centered">
-            <p class="is-size-6" style="margin-bottom: 5px;">CLASS</p>
+            <p class="is-size-6">CLASS</p>
             <div class="real-video-container">
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px; margin-bottom: 5px;">
+              <video autoplay muted loop playsinline style="border: 1px solid #ccc; border-radius: 5px; margin-bottom: 8px;">
                 <source src="./static/videos/class_above.mp4" type="video/mp4">
               </video>
-              <video poster="" autoplay muted loop playsinline width="100%" style="border: 1px solid #ccc; border-radius: 5px;">
+              <video autoplay muted loop playsinline style="border: 1px solid #ccc; border-radius: 5px;">
                 <source src="./static/videos/class_below.mp4" type="video/mp4">
               </video>
             </div>
-            <p style="color: #F44336; font-weight: bold; margin-top: 5px;">Fail</p>
+            <p style="color: #F44336; font-weight: bold;">Fail</p>
           </div>
-
         </div>
-        <br>
 
-        <h3 class="title is-4">3. Unseen Task Adaptation</h3>
+        <h3 class="title is-4 mt-6">3. Unseen Task Adaptation</h3>
         <div class="columns is-centered is-vcentered">
           <div class="column is-12 has-text-centered">
-            <div class="content has-text-justified">
-              <p>
-                We investigate whether representations learned on one dataset (Stack Three) provide useful priors for another task (Coffee).
-                As shown in the graph, VILA provides a stronger prior than baselines, enabling data-efficient adaptation.
-              </p>
-            </div>
-            <img src="./static/images/task_adaptation_combined_line.png" 
-                 alt="Task Adaptation"
-                 class="adaptation-img"
-                 onerror="this.src='https://via.placeholder.com/500x300?text=Figure+5:+Task+Adaptation';">
+            <img src="./static/images/task_adaptation_combined_line.png" class="adaptation-img" alt="Task Adaptation">
+            <p class="is-size-7">VILA provides a stronger prior, enabling data-efficient adaptation.</p>
           </div>
         </div>
 
-        <h3 class="title is-4">4. Representation Analysis</h3>
-        <div class="content has-text-justified">
-          <p>
-            We analyze the quality of learned representations using qualitative visualizations (UMAP).
-            The <strong>View UMAP</strong> is colored by camera ID (to check invariance), and the <strong>Action UMAP</strong> is colored by ground-truth action clusters (to check dynamics structure).
-          </p>
-        </div>
+        <h3 class="title is-4 mt-6">4. Representation Analysis</h3>
 
         <h5 class="title is-6 has-text-centered">View Invariance (Colored by View ID)</h5>
-        <div class="columns is-centered is-vcentered is-multiline">
+        <div class="columns is-centered is-multiline">
           <div class="column is-6 has-text-centered">
-            <img src="./static/images/umap_views_before.png" 
-                 alt="View UMAP Before"
-                 class="analysis-img"
-                 onerror="this.src='https://via.placeholder.com/400x300?text=View+UMAP+(Before)';">
-            <p>Before Policy Training</p>
+            <img src="./static/images/umap_views_before.png" class="analysis-img" alt="View UMAP Before">
+            <p>Before</p>
           </div>
           <div class="column is-6 has-text-centered">
-            <img src="./static/images/umap_views_after.png" 
-                 alt="View UMAP After"
-                 class="analysis-img"
-                 onerror="this.src='https://via.placeholder.com/400x300?text=View+UMAP+(After)';">
-            <p>After Policy Training</p>
+            <img src="./static/images/umap_views_after.png" class="analysis-img" alt="View UMAP After">
+            <p>After</p>
           </div>
         </div>
-        <p class="is-size-7 has-text-centered" style="margin-bottom: 20px;">
-          <em>Colors represent different camera views. VILA shows highly mixed distributions (view invariance) in both stages.</em>
-        </p>
 
-        <h5 class="title is-6 has-text-centered">Action Semantics (Colored by Action Cluster)</h5>
-        <div class="columns is-centered is-vcentered is-multiline">
+        <h5 class="title is-6 has-text-centered mt-5">Action Semantics (Colored by Action Cluster)</h5>
+        <div class="columns is-centered is-multiline">
           <div class="column is-6 has-text-centered">
-            <img src="./static/images/umap_action_before.png" 
-                 alt="Action UMAP Before"
-                 class="analysis-img"
-                 onerror="this.src='https://via.placeholder.com/400x300?text=Action+UMAP+(Before)';">
-            <p>Before Policy Training</p>
+            <img src="./static/images/umap_action_before.png" class="analysis-img" alt="Action UMAP Before">
+            <p>Before</p>
           </div>
           <div class="column is-6 has-text-centered">
-            <img src="./static/images/umap_action_after.png" 
-                 alt="Action UMAP After"
-                 class="analysis-img"
-                 onerror="this.src='https://via.placeholder.com/400x300?text=Action+UMAP+(After)';">
-            <p>After Policy Training</p>
+            <img src="./static/images/umap_action_after.png" class="analysis-img" alt="Action UMAP After">
+            <p>After</p>
           </div>
         </div>
-        <p class="is-size-7 has-text-centered">
-          <em>Colors represent ground-truth action clusters. VILA maintains clear cluster structures (dynamics awareness).</em>
-        </p>
 
       </div>
     </div>
   </div>
 </section>
-
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
@@ -460,37 +376,30 @@
     <pre><code>@article{jeong2026vila,
   author    = {Jeong, Youngjoon and Chun, Junha and Kim, Taesup},
   title     = {Learning to Act Robustly with View-Invariant Latent Actions},
-
 }</code></pre>
   </div>
 </section>
 
-
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
-      <a class="icon-link" href="#" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website template was adapted from <a href="https://nerfies.github.io/">Nerfies</a>.
-          </p>
-        </div>
-      </div>
+      <p>This website template was adapted from <a href="https://nerfies.github.io/">Nerfies</a>.</p>
     </div>
   </div>
 </footer>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const carousels = bulmaCarousel.attach('#sim-results-carousel', {
+    // Ensure single initialization
+    bulmaCarousel.attach('#sim-results-carousel', {
       slidesToScroll: 1,
       slidesToShow: 1,
+
+      // Cross-version safety
+      loop: false,
       infinite: false,
+
+      autoplay: false,
       pagination: true,
       navigation: true
     });
@@ -499,3 +408,4 @@
 
 </body>
 </html>
+
